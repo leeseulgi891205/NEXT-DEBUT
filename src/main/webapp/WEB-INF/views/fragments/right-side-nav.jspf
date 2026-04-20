@@ -1,0 +1,35 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<c:set var="loggedIn" value="${not empty sessionScope.LOGIN_MEMBER}" />
+<div class="hero-side-nav hero-side-nav--global" aria-label="빠른 메뉴">
+  <a href="${ctx}/game" class="hero-side-btn hero-side-btn--main" title="GAME START">
+    <i class="fas fa-play"></i>
+  </a>
+  <button type="button" class="hero-side-btn" title="AI CHATBOT" aria-label="AI 챗봇 열기" onclick="toggleChatWidget()">
+    <i class="fas fa-robot"></i>
+  </button>
+  <c:choose>
+    <c:when test="${loggedIn}">
+      <button type="button" class="hero-side-btn" title="LIVE CHAT" aria-label="실시간 채팅방 열기" onclick="toggleChatroomWidget()">
+        <i class="fas fa-message"></i>
+      </button>
+    </c:when>
+    <c:otherwise>
+      <button type="button" class="hero-side-btn" title="LIVE CHAT" aria-label="로그인 후 실시간 채팅 이용" onclick="location.href='${ctx}/login?redirect=/main'">
+        <i class="fas fa-message"></i>
+      </button>
+    </c:otherwise>
+  </c:choose>
+  <a href="${ctx}/game/run/ranking" class="hero-side-btn" title="RANKING">
+    <i class="fas fa-ranking-star"></i>
+  </a>
+  <a href="${ctx}/board" class="hero-side-btn" title="BOARD">
+    <i class="fas fa-comments"></i>
+  </a>
+  <a href="${ctx}/guide" class="hero-side-btn" title="GUIDE">
+    <i class="fas fa-book-open"></i>
+  </a>
+  <button type="button" class="hero-side-btn hero-side-btn--fx" id="unitxFxToggleBtn" title="배경 효과 끄기" aria-label="배경 효과 끄기" aria-pressed="false">
+    <i class="fas fa-gauge-simple" id="unitxFxToggleIcon"></i>
+  </button>
+</div>

@@ -1,0 +1,159 @@
+<script type="application/json" id="castMapRegionsData"><c:out value="${castMapRegionsJson}" escapeXml="false"/></script>
+<div id="castMapBoot" class="hidden"
+     data-ctx="<c:out value='${ctx}'/>"
+     data-explore-url="<c:out value='${ctx}'/>/boards/map/explore"
+     data-logged-in="${loggedIn}"
+     data-has-kakao="${not empty kakaoMapJavascriptKey}"
+     data-modal-title="<c:out value='${cmUi.modalTitleResult}'/>"
+     data-modal-eyebrow="<c:out value='${cmUi.modalEyebrow}'/>"
+     data-msg-spot-found="<c:out value='${cmUi.modalTitleSpotFound}'/>"
+     data-msg-need-region="<c:out value='${cmUi.msgNeedRegion}'/>"
+     data-msg-lack="<c:out value='${cmUi.msgLackCoin}'/>"
+     data-msg-error="<c:out value='${cmUi.msgError}'/>"
+     data-msg-none="<c:out value='${cmUi.msgNoneFound}'/>"
+     data-msg-explore-error="<c:out value='${cmUi.msgExploreError}'/>"
+     data-preview-title="<c:out value='${cmUi.previewDefaultTitle}'/>"
+     data-preview-catch="<c:out value='${cmUi.previewDefaultCatch}'/>"
+     data-preview-vibe="<c:out value='${cmUi.previewDefaultVibe}'/>"
+     data-preview-tip="<c:out value='${cmUi.previewDefaultTip}'/>"
+     data-buff-idle="<c:out value='${cmUi.statusBuffIdle}'/>"
+     data-buff-divider="<c:out value='${cmUi.statusBuffDivider}'/>"
+     data-spot-label="<c:out value='${cmUi.modalLabelSpot}'/>"
+     data-effect-label="<c:out value='${cmUi.modalLabelEffect}'/>"
+     data-expire-label="<c:out value='${cmUi.modalLabelExpire}'/>"></div>
+
+<div class="cast-map-embed rounded-2xl sm:rounded-3xl w-full flex flex-col">
+  <div class="cast-map-embed__inner flex flex-col w-full">
+    <header class="cast-map-embed__head">
+      <div class="cast-map-embed__head-text min-w-0">
+        <p class="cast-map-head__k">STREET SCOUT</p>
+        <h2 class="cast-map-embed__title font-orbitron font-black text-slate-900 leading-tight">&#44600;&#44144;&#47532; &#52880;&#49828;&#54021;</h2>
+        <p class="cast-map-embed__lead text-slate-600 mt-1.5 max-w-3xl"><c:out value="${cmUi.lead}"/></p>
+      </div>
+      <a href="${ctx}/market/gacha" class="cast-map-embed__gacha">
+        <i class="fas fa-dice"></i> <c:out value="${cmUi.btnGacha}"/>
+      </a>
+    </header>
+
+    <section class="cast-status-strip" aria-label="<c:out value='${cmUi.statusAria}'/>">
+      <div class="cast-status-card">
+        <span class="cast-status-card__label">FREE RUN</span>
+        <strong class="cast-status-card__value" id="castStatusFree">${castMap['freeExploresLeftToday'] != null ? castMap['freeExploresLeftToday'] : '-'}</strong>
+        <span class="cast-status-card__sub"><c:out value="${cmUi.statusFreeSub}"/></span>
+      </div>
+      <div class="cast-status-card">
+        <span class="cast-status-card__label">COIN FLOW</span>
+        <strong class="cast-status-card__value" id="castStatusCoin">${castMap['currentCoin'] != null ? castMap['currentCoin'] : '-'}</strong>
+        <span class="cast-status-card__sub"><c:out value="${cmUi.statusCoinSub}"/></span>
+      </div>
+      <div class="cast-status-card cast-status-card--buff ${not empty castMap['activeBuff'] ? 'is-live' : ''}">
+        <span class="cast-status-card__label">LIVE BUFF</span>
+        <strong class="cast-status-card__value" id="castBuffTitle">${not empty castMap['activeBuff'] ? castMap['activeBuff']['spotLabel'] : cmUi.statusBuffIdle}</strong>
+        <span class="cast-status-card__sub" id="castBuffMeta">${not empty castMap['activeBuff'] ? castMap['activeBuff']['effectLine'].concat(cmUi.statusBuffDivider).concat(castMap['activeBuff']['expireAt']) : cmUi.statusBuffIdle}</span>
+      </div>
+    </section>
+
+    <section class="cast-stage">
+      <div class="cast-stage__map">
+        <c:if test="${not empty kakaoMapJavascriptKey}">
+          <div class="cast-map-wrap cast-map-wrap--wide">
+            <div id="castMapCanvas" aria-label="<c:out value='${cmUi.mapAria}'/>"></div>
+          </div>
+          <p class="cast-map-hint"><i class="fas fa-hand-pointer mr-1"></i> <c:out value="${cmUi.mapHint}"/></p>
+        </c:if>
+        <c:if test="${empty kakaoMapJavascriptKey}">
+          <div class="cast-map-nokey rounded-2xl border border-amber-200/90 bg-gradient-to-br from-amber-50 to-orange-50/80 px-4 py-4 text-sm text-amber-950 shadow-inner">
+            <c:out value="${cmUi.noKeyWarning}"/>
+          </div>
+        </c:if>
+      </div>
+
+      <div class="cast-stage__panel">
+        <div class="cast-region-panel">
+          <div class="cast-region-panel__head">
+            <p class="cast-region-panel__label"><i class="fas fa-location-dot" aria-hidden="true"></i> <c:out value="${cmUi.labelRegionPanel}"/></p>
+            <div class="cast-region-panel__selected"><c:out value="${cmUi.labelSelect}"/> <strong id="castSelectedLabel">-</strong></div>
+          </div>
+          <div class="cast-region-chips" id="castRegionChips">
+            <c:forEach var="r" items="${regions}">
+              <button type="button" class="cast-region-chip" data-region-id="${r.id}" aria-pressed="false">
+                <span class="cast-region-chip__title">${r.label}</span>
+                <span class="cast-region-chip__sub">${r.catchCopy}</span>
+              </button>
+            </c:forEach>
+          </div>
+        </div>
+
+        <section class="cast-region-preview" id="castRegionPreview" aria-live="polite">
+          <div class="cast-region-preview__k"><c:out value="${cmUi.previewEyebrow}"/></div>
+          <h3 class="cast-region-preview__title" id="castPreviewTitle"><c:out value="${cmUi.previewDefaultTitle}"/></h3>
+          <p class="cast-region-preview__lead" id="castPreviewCatch"><c:out value="${cmUi.previewDefaultCatch}"/></p>
+          <p class="cast-region-preview__vibe" id="castPreviewVibe"><c:out value="${cmUi.previewDefaultVibe}"/></p>
+          <div class="cast-region-preview__meta">
+            <div class="cast-preview-pill">
+              <span class="cast-preview-pill__label"><c:out value="${cmUi.previewLabelFocus}"/></span>
+              <strong id="castPreviewFocus">-</strong>
+            </div>
+            <div class="cast-preview-pill">
+              <span class="cast-preview-pill__label"><c:out value="${cmUi.previewLabelPickup}"/></span>
+              <strong id="castPreviewPickup">-</strong>
+            </div>
+          </div>
+          <p class="cast-region-preview__tip" id="castPreviewTip"><c:out value="${cmUi.previewDefaultTip}"/></p>
+        </section>
+      </div>
+    </section>
+
+    <div class="cast-explore-bar">
+      <div class="cast-explore-stats text-sm text-slate-700">
+        <c:choose>
+          <c:when test="${loggedIn}">
+            <span class="inline-flex flex-wrap items-baseline gap-x-1"><c:out value="${cmUi.labelFreeBeforeCount}"/><strong id="castFreeLeft">${castMap['freeExploresLeftToday'] != null ? castMap['freeExploresLeftToday'] : '-'}</strong><c:out value="${cmUi.labelFreeAfterCount}"/></span>
+            <span class="mx-2 text-slate-300 hidden sm:inline">|</span>
+            <span class="cast-explore-cost inline-flex flex-wrap items-baseline gap-x-1 whitespace-nowrap"><c:out value="${cmUi.labelNextExplore}"/> <strong id="castNextCost">${castMap['nextExploreCost'] != null ? castMap['nextExploreCost'] : '-'}</strong><c:out value="${cmUi.coinSuffix}"/></span>
+          </c:when>
+          <c:otherwise>
+            <span class="text-slate-600"><c:out value="${cmUi.loginRequired}"/></span>
+          </c:otherwise>
+        </c:choose>
+      </div>
+      <button type="button" class="cast-explore-btn" id="castExploreBtn" ${loggedIn ? '' : 'disabled'}>
+        <i class="fas fa-compass mr-1"></i> <span id="castExploreBtnLabel"><c:out value="${cmUi.btnExplore}"/></span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="cast-modal-dim" id="castResultDim" role="dialog" aria-modal="true" aria-labelledby="castResultTitle">
+  <div class="cast-modal-panel">
+    <div class="cast-modal-ribbon" aria-hidden="true"></div>
+    <div class="cast-modal-panel__body">
+      <div class="cast-modal-iconwrap" id="castResultIcon" aria-hidden="true"><i class="fas fa-wand-magic-sparkles text-violet-600"></i></div>
+      <div class="cast-modal-eyebrow" id="castResultEyebrow"><c:out value="${cmUi.modalEyebrow}"/></div>
+      <h3 id="castResultTitle"><c:out value="${cmUi.modalTitleResult}"/></h3>
+      <p class="cast-modal-msg" id="castResultMsg"></p>
+      <section class="cast-modal-detail" id="castResultDetail" hidden>
+        <div class="cast-modal-detail__spot">
+          <span class="cast-modal-detail__label"><c:out value="${cmUi.modalLabelSpot}"/></span>
+          <strong id="castResultSpot">-</strong>
+        </div>
+        <div class="cast-modal-detail__meta">
+          <div class="cast-modal-stat">
+            <span class="cast-modal-stat__label"><c:out value="${cmUi.modalLabelEffect}"/></span>
+            <strong id="castResultEffect">-</strong>
+          </div>
+          <div class="cast-modal-stat">
+            <span class="cast-modal-stat__label"><c:out value="${cmUi.modalLabelExpire}"/></span>
+            <strong id="castResultExpire">-</strong>
+          </div>
+        </div>
+      </section>
+      <div class="cast-modal-actions">
+        <button type="button" class="btn-ghost" id="castResultClose"><c:out value="${cmUi.modalBtnClose}"/></button>
+        <a href="${ctx}/market/gacha" class="btn-primary" id="castGoGacha" style="display:none;"><c:out value="${cmUi.modalBtnGacha}"/></a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script defer src="${ctx}/js/casting-map-board.js" charset="UTF-8"></script>

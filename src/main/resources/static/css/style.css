@@ -1,0 +1,225 @@
+@charset "UTF-8";
+
+/* 공통 유틸 — 페이지별 인라인 최소화 */
+
+.skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100000;
+    padding: 12px 18px;
+    background: var(--ux-ink, #1c1917);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    border-radius: 0 0 12px 0;
+}
+
+.skip-link:focus {
+    left: 0;
+    outline: 3px solid var(--ux-rose, #e8a4b8);
+    outline-offset: 2px;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.topnav-shell {
+    position: relative;
+    z-index: 50;
+}
+
+.topnav-shell--lobby {
+    z-index: 60;
+}
+
+/* 고정 네비 아래 본문 시작 */
+body.page-lobby main.lobby {
+    padding-top: var(--nav-h, 64px);
+}
+
+/* 구 메인(랜딩 클래스) 호환 */
+body.page-landing main.landing {
+    padding-top: var(--nav-h, 64px);
+}
+
+/* ── 전역 우측 빠른 메뉴 (topnav에 포함) ── */
+body.is-gameplay-screen .hero-side-nav--global,
+body.page-game-play .hero-side-nav--global {
+    display: none !important;
+}
+
+.hero-side-nav.hero-side-nav--global {
+    position: fixed;
+    right: 26px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10055;
+    align-items: flex-end;
+    pointer-events: auto;
+}
+
+.hero-side-nav--global .hero-side-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 16px;
+    border: 1px solid rgba(148, 163, 184, .55);
+    background: rgba(248, 250, 252, .9);
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    box-shadow: 0 10px 24px rgba(148, 163, 184, .4);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease, border-color .18s ease, filter .18s ease;
+    position: relative;
+}
+
+.hero-side-nav--global .hero-side-btn span {
+    display: none;
+}
+
+.hero-side-nav--global .hero-side-btn::after {
+    content: attr(title);
+    position: absolute;
+    right: 56px;
+    top: 50%;
+    transform: translateY(-50%) translateX(6px);
+    padding: 8px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .86);
+    border: 1px solid rgba(167, 139, 250, .22);
+    box-shadow: 0 12px 34px rgba(99, 102, 241, .10);
+    color: rgba(30, 41, 59, .88);
+    font-family: "Orbitron", sans-serif;
+    font-size: 10px;
+    letter-spacing: .14em;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease, transform 160ms ease;
+}
+
+.hero-side-nav--global .hero-side-btn:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+.hero-side-nav--global .hero-side-btn.is-active::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+}
+
+.hero-side-nav--global .hero-side-btn:hover {
+    transform: translateY(-6px) scale(1.16);
+    background: #fff;
+    border-color: rgba(232, 121, 163, .65);
+    box-shadow:
+        0 22px 44px rgba(99, 102, 241, .22),
+        0 14px 30px rgba(232, 121, 163, .20);
+    filter: brightness(1.03);
+}
+
+.hero-side-nav--global .hero-side-btn:active {
+    transform: translateY(-2px) scale(1.06);
+}
+
+.hero-side-nav--global .hero-side-btn:focus-visible {
+    outline: 2px solid rgba(167, 139, 250, .55);
+    outline-offset: 3px;
+}
+
+.hero-side-nav--global .hero-side-btn.is-active {
+    border-color: rgba(232, 121, 163, .70);
+    box-shadow:
+        0 18px 40px rgba(99, 102, 241, .18),
+        0 0 0 2px rgba(233, 176, 196, .28) inset;
+    background: #fff;
+}
+
+.hero-side-nav--global .hero-side-btn--main {
+    background: linear-gradient(145deg, #e879a3, #a78bfa);
+    color: #f9fafb;
+    border-color: rgba(248, 250, 252, .9);
+    box-shadow:
+        0 18px 46px rgba(236, 72, 153, .26),
+        0 10px 26px rgba(99, 102, 241, .16);
+}
+
+.hero-side-nav--global .hero-side-btn--main:hover {
+    box-shadow:
+        0 26px 64px rgba(236, 72, 153, .30),
+        0 18px 42px rgba(99, 102, 241, .20);
+}
+
+@media (max-width: 900px) {
+    .hero-side-nav.hero-side-nav--global {
+        right: 16px;
+        top: auto;
+        bottom: 82px;
+        transform: none;
+        flex-direction: row;
+    }
+
+    .hero-side-nav--global .hero-side-btn::after {
+        right: 50%;
+        top: auto;
+        bottom: 56px;
+        transform: translateX(50%) translateY(6px);
+    }
+
+    .hero-side-nav--global .hero-side-btn:hover::after,
+    .hero-side-nav--global .hero-side-btn.is-active::after {
+        transform: translateX(50%) translateY(0);
+    }
+}
+
+/* 저사양: 배경 효과 끄기 (우측 내비 마지막 버튼) */
+.hero-side-nav--global .hero-side-btn--fx.is-fx-off {
+    border-color: rgba(34, 197, 94, 0.55);
+    background: rgba(240, 253, 244, 0.95);
+    color: rgba(22, 101, 52, 0.95);
+}
+
+html.fx-off #starsCanvas,
+html.fx-off #sceneCanvas,
+html.fx-off #bgCv,
+html.fx-off #intro-canvas,
+html.fx-off .hp,
+html.fx-off #cur-dot,
+html.fx-off #cur-ring {
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
+
+html.fx-off .burst-particle {
+    display: none !important;
+}
+
+html.fx-off.page-enter.page-enter-active {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+/* 게시판·공통 카드: 블러 제거 (저사양) */
+html.fx-off .glass-card {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+}

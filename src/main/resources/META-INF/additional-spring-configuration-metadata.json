@@ -1,0 +1,60 @@
+{
+  "properties": [
+    {
+      "name": "gemini.api-key",
+      "type": "java.lang.String",
+      "description": "Google Generative Language API (Gemini) key."
+    },
+    {
+      "name": "app.base-url",
+      "type": "java.lang.String",
+      "description": "Public base URL of this application (e.g. for payment redirects)."
+    },
+    {
+      "name": "kakaopay.cid",
+      "type": "java.lang.String",
+      "description": "KakaoPay merchant CID."
+    },
+    {
+      "name": "kakaopay.secret-key",
+      "type": "java.lang.String",
+      "description": "KakaoPay secret key."
+    },
+    {
+      "name": "kakaopay.ready-url",
+      "type": "java.lang.String",
+      "description": "KakaoPay payment ready API URL."
+    },
+    {
+      "name": "kakaopay.approve-url",
+      "type": "java.lang.String",
+      "description": "KakaoPay payment approve API URL."
+    },
+    {
+      "name": "kakao.map.javascript-key",
+      "type": "java.lang.String",
+      "description": "Kakao Maps JavaScript API key."
+    },
+    {
+      "name": "spring.h2.console.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Enable H2 web console."
+    },
+    {
+      "name": "spring.h2.console.path",
+      "type": "java.lang.String",
+      "description": "H2 console path."
+    },
+    {
+      "name": "spring.h2.console.settings.web-allow-others",
+      "type": "java.lang.Boolean",
+      "description": "Allow remote access to H2 console."
+    },
+    {
+      "name": "game.narration.use-gemini",
+      "type": "java.lang.Boolean",
+      "description": "If true, use Gemini for game narration and idol dialogue; if false, use DB fallbacks only (NarrationFallbackSituation etc.).",
+      "defaultValue": false
+    }
+  ]
+}

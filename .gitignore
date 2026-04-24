@@ -41,3 +41,27 @@ out/
 
 # 로컬 API 키 (Gemini 등)
 **/application-local.properties
+node_modules
+
+# 이식용 JRE/Python·다운로드 캐시(런처/ensure_runtime 또는 배포 번들에서 채움 — 통째로 재생성 가능)
+runtime/
+# 로컬 Python 가상환경(python-ml 작업 시 재생성)
+.venv/
+.gradle-user-home/
+
+# runtime / local data / logs
+logs/
+data/
+outputs/
+tmp/
+launcher-archive/
+
+# Python cache
+__pycache__/
+*.pyc
+*.class
+
+# local launcher/runtime artifacts
+*.pid
+compile-out.txt
+*.lnk
